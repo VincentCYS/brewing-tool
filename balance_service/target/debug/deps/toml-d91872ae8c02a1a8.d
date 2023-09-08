@@ -1,0 +1,12 @@
+/Users/vincentysc/Documents/Github/balance_service/target/debug/deps/toml-d91872ae8c02a1a8.rmeta: /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/lib.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/value.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/datetime.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/ser.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/de.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/tokens.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/macros.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/spanned.rs
+
+/Users/vincentysc/Documents/Github/balance_service/target/debug/deps/toml-d91872ae8c02a1a8.d: /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/lib.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/value.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/datetime.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/ser.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/de.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/tokens.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/macros.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/spanned.rs
+
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/lib.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/value.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/datetime.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/ser.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/de.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/tokens.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/macros.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/toml-0.4.10/src/spanned.rs:

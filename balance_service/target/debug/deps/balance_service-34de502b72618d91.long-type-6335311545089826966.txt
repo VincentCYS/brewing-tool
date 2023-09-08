@@ -1,0 +1,1 @@
+diesel::query_builder::SelectStatement<table, query_builder::select_clause::DefaultSelectClause, query_builder::distinct_clause::NoDistinctClause, query_builder::where_clause::NoWhereClause, query_builder::order_clause::OrderClause<Desc<columns::id>>, query_builder::limit_clause::LimitClause<diesel::expression::bound::Bound<BigInt, i64>>>

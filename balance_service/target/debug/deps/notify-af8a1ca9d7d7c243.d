@@ -1,0 +1,10 @@
+/Users/vincentysc/Documents/Github/balance_service/target/debug/deps/notify-af8a1ca9d7d7c243.rmeta: /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/lib.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/fsevent.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/null.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/poll.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/debounce/mod.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/debounce/timer.rs
+
+/Users/vincentysc/Documents/Github/balance_service/target/debug/deps/notify-af8a1ca9d7d7c243.d: /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/lib.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/fsevent.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/null.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/poll.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/debounce/mod.rs /Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/debounce/timer.rs
+
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/lib.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/fsevent.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/null.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/poll.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/debounce/mod.rs:
+/Users/vincentysc/.cargo/registry/src/index.crates.io-6f17d22bba15001f/notify-4.0.17/src/debounce/timer.rs:

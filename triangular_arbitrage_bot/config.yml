@@ -1,8 +1,0 @@
-trading_service:
-    enable: true
-    trading_pairs: ["BTCUSDT", "ETHBTC", "ETHUSDT"]
-    event_type: "depth"
-    update_interval: "100ms"
-    init_investment: 1000.0
-    fee_rate: 0.0001
-    min_profit: 0.0

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -7,6 +7,8 @@ export default function Home() {
 		placeholder: "Coffee grounds",
 		value: "",
 	});
+
+	const [targetGroundsInput, setTargetGroundsInput] = useState("");
 
 	const [inputs, setInputs] = useState([
 		{ id: 1, placeholder: "water amount", value: "" },
@@ -31,6 +33,10 @@ export default function Home() {
 			})
 		);
 	};
+
+	useEffect(() => {
+		recalculateWaterAmounts(targetGroundsInput);
+	}, [inputs, groundsInput, targetGroundsInput]);
 
 	const recalculateWaterAmounts = (value: string) => {
 		// Convert inputs to numbers
@@ -67,21 +73,37 @@ export default function Home() {
 				</p>
 
 				<div className={styles.card}>
-					<div className={styles.section}>
-						<h2>Original Recipe</h2>
-						<input
-							key={"groundsInput"}
-							type="number"
-							value={groundsInput.value}
-							onChange={(e) =>
-								setGroundsInput({
-									...groundsInput,
-									value: e.target.value,
-								})
-							}
-							placeholder="Coffee grounds (g)"
-							className={styles.input}
-						/>
+					<div>
+						<div style={{ display: "flex", gap: "1rem" }}>
+							<div className={styles.section}>
+								<h2>Original Recipe</h2>
+								<div className={styles.inputGroup}>
+									<input
+										key={"groundsInput"}
+										type="number"
+										value={groundsInput.value}
+										onChange={(e) =>
+											setGroundsInput({
+												...groundsInput,
+												value: e.target.value,
+											})
+										}
+										placeholder="Coffee grounds (g)"
+										className={styles.input}
+									/>
+								</div>
+							</div>
+							<div className={styles.section}>
+								<h2>Target Recipe</h2>
+								<input
+									key={"targetGroundsInput"}
+									type="number"
+									onChange={(e) => setTargetGroundsInput(e.target.value)}
+									placeholder="Target coffee grounds (g)"
+									className={styles.input}
+								/>
+							</div>
+						</div>
 						{inputs.map((input, index) => (
 							<div key={input.id} className={styles.inputGroup}>
 								<input
@@ -90,9 +112,10 @@ export default function Home() {
 									onChange={(e) => handleInputChange(input.id, e.target.value)}
 									placeholder="Water amount (ml)"
 									className={styles.input}
+									style={{ width: "48%" }}
 								/>
 								{targetWaterAmounts[index] && (
-									<div className={styles.targetAmount}>
+									<div className={styles.targetAmount} style={{ width: "48%" }}>
 										→ {targetWaterAmounts[index]}ml
 									</div>
 								)}
@@ -108,7 +131,7 @@ export default function Home() {
 						)}
 					</div>
 
-					<div className={styles.section}>
+					{/* <div className={styles.section}>
 						<h2>Target Recipe</h2>
 						<input
 							key={"targetGroundsInput"}
@@ -119,7 +142,7 @@ export default function Home() {
 							placeholder="Target coffee grounds (g)"
 							className={styles.input}
 						/>
-					</div>
+					</div> */}
 				</div>
 			</main>
 		</div>

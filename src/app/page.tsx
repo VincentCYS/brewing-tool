@@ -17,8 +17,17 @@ export default function Home() {
 
 	const handleAddInput = () => {
 		if (inputs.length < 10) {
-			const newId = inputs.length + 1;
+			const newId = inputs[inputs.length - 1].id + 1;
 			setInputs([...inputs, { id: newId, placeholder: "", value: "" }]);
+		}
+	};
+
+	const handleRemoveInput = (id: number) => {
+		if (inputs.length > 1) {
+			setInputs(inputs.filter((input) => input.id !== id));
+			setTargetWaterAmounts((prev) =>
+				prev.filter((_, index) => inputs[index].id !== id)
+			);
 		}
 	};
 
@@ -73,6 +82,28 @@ export default function Home() {
 				</p>
 
 				<div className={styles.card}>
+					<div className={styles.ratioDisplay}>
+						{parseFloat(inputs[inputs.length - 1]?.value) &&
+						parseFloat(groundsInput.value) ? (
+							<>
+								<h3 className={styles.ratioTitle}>Water to Coffee Ratio</h3>
+								<div className={styles.ratioValue}>
+									<span>1</span>
+									<span>:</span>
+									<span>
+										{(
+											parseFloat(inputs[inputs.length - 1].value) /
+											parseFloat(groundsInput.value)
+										).toFixed(1)}
+									</span>
+								</div>
+							</>
+						) : (
+							<div className={styles.ratioPlaceholder}>
+								Enter coffee and water amounts to see ratio
+							</div>
+						)}
+					</div>
 					<div>
 						<div style={{ display: "flex", gap: "1rem" }}>
 							<div className={styles.section}>
@@ -106,16 +137,28 @@ export default function Home() {
 						</div>
 						{inputs.map((input, index) => (
 							<div key={input.id} className={styles.inputGroup}>
-								<input
-									type="number"
-									value={input.value}
-									onChange={(e) => handleInputChange(input.id, e.target.value)}
-									placeholder="Water amount (ml)"
-									className={styles.input}
-									style={{ width: "48%" }}
-								/>
+								<div className={styles.waterInputContainer}>
+									<input
+										type="number"
+										value={input.value}
+										onChange={(e) =>
+											handleInputChange(input.id, e.target.value)
+										}
+										placeholder="Water amount (ml)"
+										className={styles.input}
+									/>
+									{inputs.length > 1 && (
+										<button
+											onClick={() => handleRemoveInput(input.id)}
+											className={styles.removeButton}
+											aria-label="Remove water input"
+										>
+											×
+										</button>
+									)}
+								</div>
 								{targetWaterAmounts[index] && (
-									<div className={styles.targetAmount} style={{ width: "48%" }}>
+									<div className={styles.targetAmount}>
 										→ {targetWaterAmounts[index]}ml
 									</div>
 								)}
@@ -130,19 +173,6 @@ export default function Home() {
 							</button>
 						)}
 					</div>
-
-					{/* <div className={styles.section}>
-						<h2>Target Recipe</h2>
-						<input
-							key={"targetGroundsInput"}
-							type="number"
-							onChange={(e) => {
-								recalculateWaterAmounts(e.target.value);
-							}}
-							placeholder="Target coffee grounds (g)"
-							className={styles.input}
-						/>
-					</div> */}
 				</div>
 			</main>
 		</div>

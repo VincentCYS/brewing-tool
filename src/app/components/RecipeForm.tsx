@@ -20,7 +20,8 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { InputsContext } from "../page";
+
+import { InputsContext } from "../contexts/InputsContext";
 import styles from "../page.module.css";
 import { InputsContextType } from "../types/InputsContextType";
 import RatioDisplay from "./RatioDisplay";

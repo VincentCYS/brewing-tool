@@ -1,36 +1,23 @@
 "use client";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Button, Select, Typography } from "antd";
-import {
-	Dispatch,
-	SetStateAction,
-	useContext,
-	useEffect,
-	useState,
-} from "react";
+import { useContext, useEffect, useState } from "react";
 import { receips } from "../constants/defaultRecipes";
-import { InputsContext } from "../page";
+import { InputsContext } from "../contexts/InputsContext";
 import styles from "../page.module.css";
 import { InputsContextType } from "../types/InputsContextType";
 import { Recipe } from "../types/Recipe";
 
 const { Title } = Typography;
 
-export default function MyFavouriteSelector(props: {
-	favorites: Recipe[];
-	setFavorites: Dispatch<SetStateAction<Recipe[]>>;
-}) {
+export default function MyFavouriteSelector() {
 	const [recipeName, setRecipeName] = useState("");
-	const { setInputs, setGroundsInput }: InputsContextType =
-		useContext(InputsContext);
-
-	const loadFavorites = () => {
-		const saved = localStorage.getItem("coffeeRecipes");
-		if (saved && props.favorites.length === 3) {
-			const fav = props.favorites.concat(JSON.parse(saved));
-			props.setFavorites(fav);
-		}
-	};
+	const {
+		setInputs,
+		setGroundsInput,
+		favorites,
+		setFavorites,
+	}: InputsContextType = useContext(InputsContext);
 
 	const loadRecipe = (recipe: Recipe) => {
 		// Set recipe name
@@ -50,10 +37,8 @@ export default function MyFavouriteSelector(props: {
 	};
 
 	const deleteRecipe = (id: string) => {
-		const updatedFavorites = props.favorites.filter(
-			(recipe) => recipe.value !== id
-		);
-		props.setFavorites(updatedFavorites);
+		const updatedFavorites = favorites.filter((recipe) => recipe.value !== id);
+		setFavorites(updatedFavorites);
 
 		localStorage.setItem(
 			"coffeeRecipes",
@@ -63,10 +48,7 @@ export default function MyFavouriteSelector(props: {
 		);
 
 		// Clear current recipe if it's the one being deleted
-		if (
-			props.favorites.find((recipe) => recipe.value === id)?.label ===
-			recipeName
-		) {
+		if (favorites.find((recipe) => recipe.value === id)?.label === recipeName) {
 			setRecipeName("");
 			setGroundsInput("");
 			setInputs([{ id: 1, placeholder: "water amount", value: "" }]);
@@ -74,8 +56,16 @@ export default function MyFavouriteSelector(props: {
 	};
 
 	useEffect(() => {
+		const loadFavorites = () => {
+			const saved = localStorage.getItem("coffeeRecipes");
+			if (saved && favorites.length === 3) {
+				const fav = favorites.concat(JSON.parse(saved));
+				setFavorites(fav);
+			}
+		};
+
 		loadFavorites();
-	}, [recipeName]);
+	}, [recipeName, favorites, setFavorites]);
 
 	return (
 		<div className={styles.favoritesSection}>
@@ -83,21 +73,19 @@ export default function MyFavouriteSelector(props: {
 			<div className={styles.favoritesWrapper}>
 				<Select
 					onChange={(id) => {
-						const recipe = props.favorites.find((r) => r.value === id);
+						const recipe = favorites.find((r) => r.value === id);
 						if (recipe) loadRecipe(recipe);
 					}}
-					options={props.favorites}
+					options={favorites}
 					placeholder="Select recipe"
 					style={{ width: "100%" }}
 				/>
 
-				{props.favorites.find((recipe) => recipe.label === recipeName) && (
+				{favorites.find((recipe) => recipe.label === recipeName) && (
 					<Button
 						type="text"
 						onClick={() => {
-							const recipe = props.favorites.find(
-								(r) => r.label === recipeName
-							);
+							const recipe = favorites.find((r) => r.label === recipeName);
 							if (recipe) deleteRecipe(recipe.value);
 						}}
 						icon={<DeleteOutlined />}

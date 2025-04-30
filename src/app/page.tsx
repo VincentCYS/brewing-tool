@@ -1,10 +1,10 @@
 "use client";
 import { Divider, Layout, Typography } from "antd";
-import { createContext, useState } from "react";
+import { useState } from "react";
 import MyFavouriteSelector from "./components/MyFavouriteSelector";
 import RecipeForm from "./components/RecipeForm";
 import { receips } from "./constants/defaultRecipes";
-import { InputsContextType } from "./types/InputsContextType";
+import { InputsContext } from "./contexts/InputsContext";
 
 const { Header, Content } = Layout;
 const { Text, Title } = Typography;
@@ -15,13 +15,6 @@ interface Recipe {
 	grounds: string;
 	waterAmounts: Array<{ id: number; value: string }>;
 }
-
-export const InputsContext = createContext<InputsContextType>({
-	inputs: [],
-	setInputs: () => {},
-	groundsInput: "",
-	setGroundsInput: () => {},
-});
 
 export default function Home() {
 	const [groundsInput, setGroundsInput] = useState("");
@@ -76,12 +69,16 @@ export default function Home() {
 				<Divider />
 
 				<InputsContext.Provider
-					value={{ inputs, setInputs, groundsInput, setGroundsInput }}
+					value={{
+						inputs,
+						setInputs,
+						groundsInput,
+						setGroundsInput,
+						favorites,
+						setFavorites,
+					}}
 				>
-					<MyFavouriteSelector
-						favorites={favorites}
-						setFavorites={setFavorites}
-					/>
+					<MyFavouriteSelector />
 
 					<RecipeForm
 						saveRecipe={saveRecipe}

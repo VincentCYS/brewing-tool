@@ -22,6 +22,7 @@ import {
 } from "react";
 import { InputsContext } from "../page";
 import styles from "../page.module.css";
+import { InputsContextType } from "../types/InputsContextType";
 import RatioDisplay from "./RatioDisplay";
 
 const { Text, Title } = Typography;
@@ -35,49 +36,53 @@ export default function RecipeForm(props: {
 	const [tableData, setTableData] = useState<TableDataType[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [messageApi, contextHolder] = message.useMessage();
-	const { inputs, setInputs, groundsInput, setGroundsInput }: any =
-		useContext(InputsContext);
+	const {
+		inputs,
+		setInputs,
+		groundsInput,
+		setGroundsInput,
+	}: InputsContextType = useContext(InputsContext);
 
 	useEffect(() => {
-		recalculateWaterAmounts(targetGroundsInput);
-	}, [inputs, groundsInput, targetGroundsInput]);
+		const recalculateWaterAmounts = (value: string) => {
+			// Convert inputs to numbers
+			const originalGrounds = parseFloat(groundsInput);
+			const targetGrounds = parseFloat(value);
 
-	const recalculateWaterAmounts = (value: string) => {
-		// Convert inputs to numbers
-		const originalGrounds = parseFloat(groundsInput);
-		const targetGrounds = parseFloat(value);
+			if (
+				isNaN(originalGrounds) ||
+				isNaN(targetGrounds) ||
+				originalGrounds === 0
+			) {
+				setTableData([]);
+				return;
+			}
 
-		if (
-			isNaN(originalGrounds) ||
-			isNaN(targetGrounds) ||
-			originalGrounds === 0
-		) {
-			setTableData([]);
-			return;
-		}
+			// Calculate ratio between target and original grounds
+			const ratio = targetGrounds / originalGrounds;
 
-		// Calculate ratio between target and original grounds
-		const ratio = targetGrounds / originalGrounds;
+			const data: TableDataType[] = [];
+			// Calculate new water amounts
+			inputs.map((input) => {
+				const originalWater = parseFloat(input.value);
 
-		let data: TableDataType[] = [];
-		// Calculate new water amounts
-		inputs.map((input: any) => {
-			const originalWater = parseFloat(input.value);
+				if (isNaN(originalWater)) return "";
 
-			if (isNaN(originalWater)) return "";
+				data.push({
+					key: input.id.toString(),
+					original: originalWater,
+					target: (originalWater * ratio).toFixed(1),
+					symbol: "→",
+				});
 
-			data.push({
-				key: input.id.toString(),
-				original: originalWater,
-				target: (originalWater * ratio).toFixed(1),
-				symbol: "→",
+				return (originalWater * ratio).toFixed(1);
 			});
 
-			return (originalWater * ratio).toFixed(1);
-		});
+			setTableData(data);
+		};
 
-		setTableData(data);
-	};
+		recalculateWaterAmounts(targetGroundsInput);
+	}, [inputs, groundsInput, targetGroundsInput]);
 
 	const handleAddInput = () => {
 		if (inputs.length < 10) {
@@ -88,14 +93,14 @@ export default function RecipeForm(props: {
 
 	const handleRemoveInput = (id: number) => {
 		if (inputs.length > 1) {
-			setInputs(inputs.filter((input: any) => input.id !== id));
+			setInputs(inputs.filter((input) => input.id !== id));
 			setTableData((prev) => prev.filter((data) => data.key !== id.toString()));
 		}
 	};
 
 	const handleInputChange = (id: number, value: string) => {
 		setInputs(
-			inputs.map((input: any) => {
+			inputs.map((input) => {
 				if (input.id === id) {
 					return { ...input, value };
 				} else {
@@ -157,7 +162,7 @@ export default function RecipeForm(props: {
 				<Button
 					type="text"
 					onClick={() => setIsModalOpen(true)}
-					disabled={!groundsInput || inputs.some((input: any) => !input.value)}
+					disabled={!groundsInput || inputs.some((input) => !input.value)}
 					icon={<StarOutlined />}
 				/>
 			</Row>
@@ -174,7 +179,7 @@ export default function RecipeForm(props: {
 			/>
 
 			<Text>Water per pour</Text>
-			{inputs.map((input: any) => (
+			{inputs.map((input) => (
 				<div
 					key={input.id}
 					className={styles.inputGroup}

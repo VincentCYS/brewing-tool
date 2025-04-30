@@ -4,6 +4,7 @@ import { createContext, useState } from "react";
 import MyFavouriteSelector from "./components/MyFavouriteSelector";
 import RecipeForm from "./components/RecipeForm";
 import { receips } from "./constants/defaultRecipes";
+import { InputsContextType } from "./types/InputsContextType";
 
 const { Header, Content } = Layout;
 const { Text, Title } = Typography;
@@ -15,7 +16,12 @@ interface Recipe {
 	waterAmounts: Array<{ id: number; value: string }>;
 }
 
-export const InputsContext = createContext({});
+export const InputsContext = createContext<InputsContextType>({
+	inputs: [],
+	setInputs: () => {},
+	groundsInput: "",
+	setGroundsInput: () => {},
+});
 
 export default function Home() {
 	const [groundsInput, setGroundsInput] = useState("");
@@ -38,7 +44,7 @@ export default function Home() {
 			waterAmounts: inputs,
 		};
 
-		let updatedFavorites = [...favorites, newRecipe];
+		const updatedFavorites = [...favorites, newRecipe];
 		localStorage.setItem(
 			"coffeeRecipes",
 			JSON.stringify(

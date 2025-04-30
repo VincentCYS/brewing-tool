@@ -11,6 +11,7 @@ import {
 import { receips } from "../constants/defaultRecipes";
 import { InputsContext } from "../page";
 import styles from "../page.module.css";
+import { InputsContextType } from "../types/InputsContextType";
 import { Recipe } from "../types/Recipe";
 
 const { Title } = Typography;
@@ -20,7 +21,7 @@ export default function MyFavouriteSelector(props: {
 	setFavorites: Dispatch<SetStateAction<Recipe[]>>;
 }) {
 	const [recipeName, setRecipeName] = useState("");
-	const { setInputs, groundsInput, setGroundsInput }: any =
+	const { setInputs, setGroundsInput }: InputsContextType =
 		useContext(InputsContext);
 
 	const loadFavorites = () => {

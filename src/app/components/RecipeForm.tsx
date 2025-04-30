@@ -1,18 +1,21 @@
 "use client";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, StarOutlined, SyncOutlined } from "@ant-design/icons";
+import type { TableProps } from "antd";
 import {
 	Button,
-	Col,
+	Divider,
 	Input,
 	InputNumber,
+	message,
 	Modal,
 	Row,
 	Space,
+	Table,
 	Typography,
-	message,
 } from "antd";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "../page.module.css";
+import RatioDisplay from "./RatioDisplay";
 
 const { Text, Title } = Typography;
 
@@ -34,19 +37,11 @@ export default function RecipeForm(props: {
 			}[]
 		>
 	>;
-	groundsInput: {
-		placeholder: string;
-		value: string;
-	};
-	setGroundsInput: Dispatch<
-		SetStateAction<{
-			placeholder: string;
-			value: string;
-		}>
-	>;
+	groundsInput: string;
+	setGroundsInput: Dispatch<SetStateAction<string>>;
 }) {
 	const [targetGroundsInput, setTargetGroundsInput] = useState("");
-	const [targetWaterAmounts, setTargetWaterAmounts] = useState<string[]>([]);
+	const [tableData, setTableData] = useState<TableDataType[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [messageApi, contextHolder] = message.useMessage();
 
@@ -56,7 +51,7 @@ export default function RecipeForm(props: {
 
 	const recalculateWaterAmounts = (value: string) => {
 		// Convert inputs to numbers
-		const originalGrounds = parseFloat(props.groundsInput.value);
+		const originalGrounds = parseFloat(props.groundsInput);
 		const targetGrounds = parseFloat(value);
 
 		if (
@@ -64,21 +59,31 @@ export default function RecipeForm(props: {
 			isNaN(targetGrounds) ||
 			originalGrounds === 0
 		) {
-			setTargetWaterAmounts([]);
+			setTableData([]);
 			return;
 		}
 
 		// Calculate ratio between target and original grounds
 		const ratio = targetGrounds / originalGrounds;
 
+		let data: TableDataType[] = [];
 		// Calculate new water amounts
 		const newWaterAmounts = props.inputs.map((input) => {
 			const originalWater = parseFloat(input.value);
+
 			if (isNaN(originalWater)) return "";
+
+			data.push({
+				key: input.id.toString(),
+				original: originalWater,
+				target: (originalWater * ratio).toFixed(1),
+				symbol: "→",
+			});
+
 			return (originalWater * ratio).toFixed(1);
 		});
 
-		setTargetWaterAmounts(newWaterAmounts);
+		setTableData(data);
 	};
 
 	const handleAddInput = () => {
@@ -94,9 +99,7 @@ export default function RecipeForm(props: {
 	const handleRemoveInput = (id: number) => {
 		if (props.inputs.length > 1) {
 			props.setInputs(props.inputs.filter((input) => input.id !== id));
-			setTargetWaterAmounts((prev) =>
-				prev.filter((_, index) => props.inputs[index].id !== id)
-			);
+			setTableData((prev) => prev.filter((data) => data.key !== id.toString()));
 		}
 	};
 
@@ -119,136 +122,141 @@ export default function RecipeForm(props: {
 		});
 	};
 
-	return (
-		<>
-			<Row gutter={[16, 16]} style={{ marginBottom: "1rem" }}>
-				<Col span={11}>
-					<Text>Original grounds</Text>
-					<InputNumber
-						key={"groundsInput"}
-						type="number"
-						value={props.groundsInput.value}
-						onChange={(e) =>
-							props.setGroundsInput({
-								...props.groundsInput,
-								value: e || "",
-							})
-						}
-						style={{ width: "100%" }}
-						addonAfter={"g"}
-					/>
-				</Col>
-				<Col
-					span={2}
+	interface TableDataType {
+		key: string;
+		original: number;
+		target: string;
+		symbol: string;
+	}
+
+	const columns: TableProps<TableDataType>["columns"] = [
+		{
+			title: "Orignial",
+			dataIndex: "original",
+			key: "original",
+		},
+		{
+			title: "",
+			dataIndex: "symbol",
+			key: "symbol",
+			render: () => (
+				<div
 					style={{
-						textAlign: "center",
-						alignSelf: "center",
 						color: "#0070f3",
 					}}
 				>
 					→
-				</Col>
-				<Col span={11}>
-					<Text>Target grounds</Text>
-					<InputNumber
-						key={"targetGroundsInput"}
-						type="number"
-						onChange={(e) => setTargetGroundsInput(e?.toString() || "")}
-						disabled={!props.groundsInput.value}
-						style={{ width: "100%" }}
-						addonAfter={"g"}
-					/>
-				</Col>
-			</Row>
+				</div>
+			),
+		},
+		{
+			title: "Target",
+			dataIndex: "target",
+			key: "target",
+		},
+	];
 
-			{props.inputs.map((input, index) => (
-				<Row gutter={[16, 16]}>
-					<Col span={11}>
-						<div key={input.id} className={styles.inputGroup}>
-							<div
-								className={styles.waterInputContainer}
-								style={{ width: "100%" }}
-							>
-								<InputNumber
-									type="number"
-									value={input.value}
-									onChange={(e) => handleInputChange(input.id, e || "")}
-									placeholder="Water"
-									style={{ width: "100%" }}
-									addonAfter={"ml"}
-								/>
-								{props.inputs.length > 1 && (
-									<Button
-										type="text"
-										danger
-										shape="circle"
-										onClick={() => handleRemoveInput(input.id)}
-										icon={<DeleteOutlined />}
-									/>
-								)}
-							</div>
-						</div>
-					</Col>
-					<Col
-						span={2}
-						style={{
-							textAlign: "center",
-							alignSelf: "center",
-							color: "#0070f3",
-						}}
-					>
-						{targetWaterAmounts[index] && <div>→</div>}
-					</Col>
-					<Col
-						span={11}
-						style={{
-							textAlign: "start",
-							alignSelf: "center",
-							color: "#0070f3",
-						}}
-					>
-						{targetWaterAmounts[index] && (
-							<div>{targetWaterAmounts[index]}ml</div>
-						)}
-					</Col>
-				</Row>
-			))}
-			<Row gutter={[16, 16]} style={{ marginBottom: "1rem" }}>
-				<Col span={11}>
-					{/* Add Input Button */}
-					{props.inputs.length < 10 && (
-						<Button
-							type="dashed"
-							onClick={handleAddInput}
-							style={{ width: "100%" }}
-						>
-							+ Add Pour
-						</Button>
-					)}
-				</Col>
-				<Col
-					span={13}
-					style={{
-						textAlign: "center",
-						alignSelf: "center",
-						color: "#0070f3",
-					}}
-				/>
-			</Row>
-			<Space direction="vertical" style={{ width: "100%" }}>
-				{/* Save Recipe Button and Modal */}
+	return (
+		<>
+			<Row
+				align="middle"
+				justify="space-between"
+				style={{ marginBottom: "1rem" }}
+			>
+				<Title level={5}>Original Brewing Recipe</Title>
 				<Button
-					type="primary"
+					type="text"
 					onClick={() => setIsModalOpen(true)}
 					disabled={
-						!props.groundsInput.value ||
-						props.inputs.some((input) => !input.value)
+						!props.groundsInput || props.inputs.some((input) => !input.value)
 					}
-					style={{ width: "100%" }}
+					icon={<StarOutlined />}
+				/>
+			</Row>
+
+			<Text>Original grounds</Text>
+			<InputNumber
+				key={"groundsInput"}
+				type="number"
+				placeholder="Coffee grounds"
+				value={props.groundsInput}
+				onChange={(e) => props.setGroundsInput(e?.toString() || "")}
+				style={{ width: "100%", marginBottom: "1rem" }}
+				addonAfter={"g"}
+			/>
+
+			<Text>Water per pour</Text>
+			{props.inputs.map((input, index) => (
+				<div
+					key={input.id}
+					className={styles.inputGroup}
+					style={{ width: "100%", marginRight: "6rem" }}
 				>
-					Save Recipe
-				</Button>
-			</Space>
+					<InputNumber
+						type="number"
+						value={input.value}
+						onChange={(e) => handleInputChange(input.id, e || "")}
+						placeholder="Water"
+						style={{ width: "100%" }}
+						addonAfter={"ml"}
+					/>
+					{props.inputs.length > 1 && (
+						<Button
+							type="text"
+							danger
+							shape="circle"
+							onClick={() => handleRemoveInput(input.id)}
+							icon={<DeleteOutlined />}
+						/>
+					)}
+				</div>
+			))}
+			<Button
+				type="dashed"
+				onClick={handleAddInput}
+				style={{ width: "100%", marginBottom: "1rem" }}
+			>
+				+
+			</Button>
+
+			<Button
+				type="text"
+				onClick={() => {
+					props.setGroundsInput("");
+					props.setInputs([{ id: 1, placeholder: "", value: "" }]);
+				}}
+				style={{ width: "100%", marginBottom: "1rem" }}
+				icon={<SyncOutlined />}
+			>
+				Reset
+			</Button>
+
+			<Space direction="vertical" style={{ width: "100%" }}></Space>
+			<Divider />
+
+			<Title level={5} style={{ marginBottom: "1rem" }}>
+				Recalculated water amount
+			</Title>
+
+			<Text>Target grounds</Text>
+			<InputNumber
+				key={"targetGroundsInput"}
+				type="number"
+				onChange={(e) => setTargetGroundsInput(e?.toString() || "")}
+				disabled={!props.groundsInput}
+				style={{ width: "100%" }}
+				addonAfter={"g"}
+			/>
+
+			<RatioDisplay inputs={props.inputs} groundsInput={props.groundsInput} />
+
+			{/* Table for displaying recalculated water amounts */}
+			<Table<TableDataType>
+				pagination={false}
+				columns={columns}
+				dataSource={tableData}
+				style={{ marginBottom: "10rem" }}
+			/>
 
 			{/* Modal for saving recipe */}
 			<Modal

@@ -1,12 +1,11 @@
 "use client";
-import { Layout, Typography } from "antd";
+import { Divider, Layout, Typography } from "antd";
 import { useState } from "react";
 import MyFavouriteSelector from "./components/MyFavouriteSelector";
-import RatioDisplay from "./components/RatioDisplay";
 import RecipeForm from "./components/RecipeForm";
 
 const { Header, Content } = Layout;
-const { Title } = Typography;
+const { Text, Title } = Typography;
 
 interface Recipe {
 	value: string;
@@ -16,10 +15,7 @@ interface Recipe {
 }
 
 export default function Home() {
-	const [groundsInput, setGroundsInput] = useState({
-		placeholder: "Coffee grounds",
-		value: "",
-	});
+	const [groundsInput, setGroundsInput] = useState("");
 
 	const [inputs, setInputs] = useState([
 		{ id: 1, placeholder: "water amount", value: "" },
@@ -28,18 +24,14 @@ export default function Home() {
 	const [recipeName, setRecipeName] = useState("");
 
 	const saveRecipe = () => {
-		if (
-			!recipeName ||
-			!groundsInput.value ||
-			inputs.some((input) => !input.value)
-		) {
+		if (!recipeName || !groundsInput || inputs.some((input) => !input.value)) {
 			return;
 		}
 
 		const newRecipe: Recipe = {
 			value: Date.now().toString(),
 			label: recipeName,
-			grounds: groundsInput.value,
+			grounds: groundsInput,
 			waterAmounts: inputs,
 		};
 
@@ -59,6 +51,16 @@ export default function Home() {
 				</Title>
 			</Header>
 			<Content style={{ padding: "0 5%" }}>
+				<Title level={3}>Brewing Ratio Calculator</Title>
+				<Text>
+					Use this tool to easily recalculate the water-to-coffee ratio for your
+					favorite brewing recipes. Enter your desired amount of coffee grounds
+					and water, save your recipes, and quickly adjust ratios for perfect
+					coffee every time.
+				</Text>
+
+				<Divider />
+
 				<MyFavouriteSelector
 					setInputs={setInputs}
 					favorites={favorites}
@@ -66,7 +68,7 @@ export default function Home() {
 					groundsInput={groundsInput}
 					setGroundsInput={setGroundsInput}
 				/>
-				<RatioDisplay inputs={inputs} groundsInput={groundsInput} />
+
 				<RecipeForm
 					saveRecipe={saveRecipe}
 					recipeName={recipeName}

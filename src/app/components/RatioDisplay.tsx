@@ -2,10 +2,7 @@
 import styles from "../page.module.css";
 
 export default function RatioDisplay(props: {
-	groundsInput: {
-		placeholder: string;
-		value: string;
-	};
+	groundsInput: string;
 	inputs: {
 		id: number;
 		placeholder: string;
@@ -15,7 +12,7 @@ export default function RatioDisplay(props: {
 	return (
 		<div className={styles.ratioDisplay}>
 			{parseFloat(props.inputs[props.inputs.length - 1]?.value) &&
-			parseFloat(props.groundsInput.value) ? (
+			parseFloat(props.groundsInput) ? (
 				<>
 					<h3 className={styles.ratioTitle}>Water to Coffee Ratio</h3>
 					<div className={styles.ratioValue}>
@@ -24,7 +21,7 @@ export default function RatioDisplay(props: {
 						<span>
 							{(
 								parseFloat(props.inputs[props.inputs.length - 1].value) /
-								parseFloat(props.groundsInput.value)
+								parseFloat(props.groundsInput)
 							).toFixed(1)}
 						</span>
 					</div>

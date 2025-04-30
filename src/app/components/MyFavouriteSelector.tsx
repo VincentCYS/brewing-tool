@@ -1,5 +1,6 @@
 "use client";
-import { Select, Typography } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Button, Select, Typography } from "antd";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "../page.module.css";
 
@@ -24,16 +25,8 @@ export default function MyFavouriteSelector(props: {
 	>;
 	favorites: Recipe[];
 	setFavorites: Dispatch<SetStateAction<Recipe[]>>;
-	groundsInput: {
-		placeholder: string;
-		value: string;
-	};
-	setGroundsInput: Dispatch<
-		SetStateAction<{
-			placeholder: string;
-			value: string;
-		}>
-	>;
+	groundsInput: string;
+	setGroundsInput: Dispatch<SetStateAction<string>>;
 }) {
 	const [recipeName, setRecipeName] = useState("");
 
@@ -49,7 +42,7 @@ export default function MyFavouriteSelector(props: {
 		setRecipeName(recipe.label);
 
 		// Set grounds input
-		props.setGroundsInput({ ...props.groundsInput, value: recipe.grounds });
+		props.setGroundsInput(recipe.grounds);
 
 		// Set water amounts
 		props.setInputs(
@@ -74,7 +67,7 @@ export default function MyFavouriteSelector(props: {
 			recipeName
 		) {
 			setRecipeName("");
-			props.setGroundsInput({ ...props.groundsInput, value: "" });
+			props.setGroundsInput("");
 			props.setInputs([{ id: 1, placeholder: "water amount", value: "" }]);
 		}
 	};
@@ -98,18 +91,16 @@ export default function MyFavouriteSelector(props: {
 				/>
 
 				{props.favorites.find((recipe) => recipe.label === recipeName) && (
-					<button
+					<Button
+						type="text"
 						onClick={() => {
 							const recipe = props.favorites.find(
 								(r) => r.label === recipeName
 							);
 							if (recipe) deleteRecipe(recipe.value);
 						}}
-						className={styles.deleteButton}
-						title="Delete recipe"
-					>
-						✕
-					</button>
+						icon={<DeleteOutlined />}
+					/>
 				)}
 			</div>
 		</div>

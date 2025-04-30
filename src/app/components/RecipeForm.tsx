@@ -13,7 +13,14 @@ import {
 	Table,
 	Typography,
 } from "antd";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+	Dispatch,
+	SetStateAction,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
+import { InputsContext } from "../page";
 import styles from "../page.module.css";
 import RatioDisplay from "./RatioDisplay";
 
@@ -23,35 +30,21 @@ export default function RecipeForm(props: {
 	saveRecipe: () => void;
 	recipeName: string;
 	setRecipeName: Dispatch<SetStateAction<string>>;
-	inputs: {
-		id: number;
-		placeholder: string;
-		value: string;
-	}[];
-	setInputs: Dispatch<
-		SetStateAction<
-			{
-				id: number;
-				placeholder: string;
-				value: string;
-			}[]
-		>
-	>;
-	groundsInput: string;
-	setGroundsInput: Dispatch<SetStateAction<string>>;
 }) {
 	const [targetGroundsInput, setTargetGroundsInput] = useState("");
 	const [tableData, setTableData] = useState<TableDataType[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [messageApi, contextHolder] = message.useMessage();
+	const { inputs, setInputs, groundsInput, setGroundsInput }: any =
+		useContext(InputsContext);
 
 	useEffect(() => {
 		recalculateWaterAmounts(targetGroundsInput);
-	}, [props.inputs, props.groundsInput, targetGroundsInput]);
+	}, [inputs, groundsInput, targetGroundsInput]);
 
 	const recalculateWaterAmounts = (value: string) => {
 		// Convert inputs to numbers
-		const originalGrounds = parseFloat(props.groundsInput);
+		const originalGrounds = parseFloat(groundsInput);
 		const targetGrounds = parseFloat(value);
 
 		if (
@@ -68,7 +61,7 @@ export default function RecipeForm(props: {
 
 		let data: TableDataType[] = [];
 		// Calculate new water amounts
-		const newWaterAmounts = props.inputs.map((input) => {
+		inputs.map((input) => {
 			const originalWater = parseFloat(input.value);
 
 			if (isNaN(originalWater)) return "";
@@ -87,25 +80,22 @@ export default function RecipeForm(props: {
 	};
 
 	const handleAddInput = () => {
-		if (props.inputs.length < 10) {
-			const newId = props.inputs[props.inputs.length - 1].id + 1;
-			props.setInputs([
-				...props.inputs,
-				{ id: newId, placeholder: "", value: "" },
-			]);
+		if (inputs.length < 10) {
+			const newId = inputs[inputs.length - 1].id + 1;
+			setInputs([...inputs, { id: newId, placeholder: "", value: "" }]);
 		}
 	};
 
 	const handleRemoveInput = (id: number) => {
-		if (props.inputs.length > 1) {
-			props.setInputs(props.inputs.filter((input) => input.id !== id));
+		if (inputs.length > 1) {
+			setInputs(inputs.filter((input) => input.id !== id));
 			setTableData((prev) => prev.filter((data) => data.key !== id.toString()));
 		}
 	};
 
 	const handleInputChange = (id: number, value: string) => {
-		props.setInputs(
-			props.inputs.map((input) => {
+		setInputs(
+			inputs.map((input) => {
 				if (input.id === id) {
 					return { ...input, value };
 				} else {
@@ -167,9 +157,7 @@ export default function RecipeForm(props: {
 				<Button
 					type="text"
 					onClick={() => setIsModalOpen(true)}
-					disabled={
-						!props.groundsInput || props.inputs.some((input) => !input.value)
-					}
+					disabled={!groundsInput || inputs.some((input) => !input.value)}
 					icon={<StarOutlined />}
 				/>
 			</Row>
@@ -179,14 +167,14 @@ export default function RecipeForm(props: {
 				key={"groundsInput"}
 				type="number"
 				placeholder="Coffee grounds"
-				value={props.groundsInput}
-				onChange={(e) => props.setGroundsInput(e?.toString() || "")}
+				value={groundsInput}
+				onChange={(e) => setGroundsInput(e?.toString() || "")}
 				style={{ width: "100%", marginBottom: "1rem" }}
 				addonAfter={"g"}
 			/>
 
 			<Text>Water per pour</Text>
-			{props.inputs.map((input, index) => (
+			{inputs.map((input) => (
 				<div
 					key={input.id}
 					className={styles.inputGroup}
@@ -200,7 +188,7 @@ export default function RecipeForm(props: {
 						style={{ width: "100%" }}
 						addonAfter={"ml"}
 					/>
-					{props.inputs.length > 1 && (
+					{inputs.length > 1 && (
 						<Button
 							type="text"
 							danger
@@ -222,8 +210,8 @@ export default function RecipeForm(props: {
 			<Button
 				type="text"
 				onClick={() => {
-					props.setGroundsInput("");
-					props.setInputs([{ id: 1, placeholder: "", value: "" }]);
+					setGroundsInput("");
+					setInputs([{ id: 1, placeholder: "", value: "" }]);
 				}}
 				style={{ width: "100%", marginBottom: "1rem" }}
 				icon={<SyncOutlined />}
@@ -243,12 +231,12 @@ export default function RecipeForm(props: {
 				key={"targetGroundsInput"}
 				type="number"
 				onChange={(e) => setTargetGroundsInput(e?.toString() || "")}
-				disabled={!props.groundsInput}
+				disabled={!groundsInput}
 				style={{ width: "100%" }}
 				addonAfter={"g"}
 			/>
 
-			<RatioDisplay inputs={props.inputs} groundsInput={props.groundsInput} />
+			<RatioDisplay inputs={inputs} groundsInput={groundsInput} />
 
 			{/* Table for displaying recalculated water amounts */}
 			<Table<TableDataType>

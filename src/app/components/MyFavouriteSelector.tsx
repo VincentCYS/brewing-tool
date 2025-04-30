@@ -1,39 +1,33 @@
 "use client";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Button, Select, Typography } from "antd";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+	Dispatch,
+	SetStateAction,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
+import { receips } from "../constants/defaultRecipes";
+import { InputsContext } from "../page";
 import styles from "../page.module.css";
+import { Recipe } from "../types/Recipe";
 
 const { Title } = Typography;
 
-interface Recipe {
-	value: string;
-	label: string;
-	grounds: string;
-	waterAmounts: Array<{ id: number; value: string }>;
-}
-
 export default function MyFavouriteSelector(props: {
-	setInputs: Dispatch<
-		SetStateAction<
-			{
-				id: number;
-				placeholder: string;
-				value: string;
-			}[]
-		>
-	>;
 	favorites: Recipe[];
 	setFavorites: Dispatch<SetStateAction<Recipe[]>>;
-	groundsInput: string;
-	setGroundsInput: Dispatch<SetStateAction<string>>;
 }) {
 	const [recipeName, setRecipeName] = useState("");
+	const { setInputs, groundsInput, setGroundsInput }: any =
+		useContext(InputsContext);
 
 	const loadFavorites = () => {
 		const saved = localStorage.getItem("coffeeRecipes");
-		if (saved) {
-			props.setFavorites(JSON.parse(saved));
+		if (saved && props.favorites.length === 3) {
+			const fav = props.favorites.concat(JSON.parse(saved));
+			props.setFavorites(fav);
 		}
 	};
 
@@ -42,10 +36,10 @@ export default function MyFavouriteSelector(props: {
 		setRecipeName(recipe.label);
 
 		// Set grounds input
-		props.setGroundsInput(recipe.grounds);
+		setGroundsInput(recipe.grounds);
 
 		// Set water amounts
-		props.setInputs(
+		setInputs(
 			recipe.waterAmounts.map((amount) => ({
 				id: amount.id,
 				placeholder: "water amount",
@@ -59,7 +53,13 @@ export default function MyFavouriteSelector(props: {
 			(recipe) => recipe.value !== id
 		);
 		props.setFavorites(updatedFavorites);
-		localStorage.setItem("coffeeRecipes", JSON.stringify(updatedFavorites));
+
+		localStorage.setItem(
+			"coffeeRecipes",
+			JSON.stringify(
+				updatedFavorites.slice(receips.length, updatedFavorites.length)
+			)
+		);
 
 		// Clear current recipe if it's the one being deleted
 		if (
@@ -67,8 +67,8 @@ export default function MyFavouriteSelector(props: {
 			recipeName
 		) {
 			setRecipeName("");
-			props.setGroundsInput("");
-			props.setInputs([{ id: 1, placeholder: "water amount", value: "" }]);
+			setGroundsInput("");
+			setInputs([{ id: 1, placeholder: "water amount", value: "" }]);
 		}
 	};
 

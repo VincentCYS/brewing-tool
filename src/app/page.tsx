@@ -1,8 +1,9 @@
 "use client";
 import { Divider, Layout, Typography } from "antd";
-import { useState } from "react";
+import { createContext, useState } from "react";
 import MyFavouriteSelector from "./components/MyFavouriteSelector";
 import RecipeForm from "./components/RecipeForm";
+import { receips } from "./constants/defaultRecipes";
 
 const { Header, Content } = Layout;
 const { Text, Title } = Typography;
@@ -14,13 +15,15 @@ interface Recipe {
 	waterAmounts: Array<{ id: number; value: string }>;
 }
 
+export const InputsContext = createContext({});
+
 export default function Home() {
 	const [groundsInput, setGroundsInput] = useState("");
 
 	const [inputs, setInputs] = useState([
 		{ id: 1, placeholder: "water amount", value: "" },
 	]);
-	const [favorites, setFavorites] = useState<Recipe[]>([]);
+	const [favorites, setFavorites] = useState<Recipe[]>(receips);
 	const [recipeName, setRecipeName] = useState("");
 
 	const saveRecipe = () => {
@@ -35,8 +38,13 @@ export default function Home() {
 			waterAmounts: inputs,
 		};
 
-		const updatedFavorites = [...favorites, newRecipe];
-		localStorage.setItem("coffeeRecipes", JSON.stringify(updatedFavorites));
+		let updatedFavorites = [...favorites, newRecipe];
+		localStorage.setItem(
+			"coffeeRecipes",
+			JSON.stringify(
+				updatedFavorites.slice(receips.length, updatedFavorites.length)
+			)
+		);
 		setFavorites(updatedFavorites);
 		setRecipeName("");
 	};
@@ -61,23 +69,20 @@ export default function Home() {
 
 				<Divider />
 
-				<MyFavouriteSelector
-					setInputs={setInputs}
-					favorites={favorites}
-					setFavorites={setFavorites}
-					groundsInput={groundsInput}
-					setGroundsInput={setGroundsInput}
-				/>
+				<InputsContext.Provider
+					value={{ inputs, setInputs, groundsInput, setGroundsInput }}
+				>
+					<MyFavouriteSelector
+						favorites={favorites}
+						setFavorites={setFavorites}
+					/>
 
-				<RecipeForm
-					saveRecipe={saveRecipe}
-					recipeName={recipeName}
-					setRecipeName={setRecipeName}
-					inputs={inputs}
-					setInputs={setInputs}
-					groundsInput={groundsInput}
-					setGroundsInput={setGroundsInput}
-				/>
+					<RecipeForm
+						saveRecipe={saveRecipe}
+						recipeName={recipeName}
+						setRecipeName={setRecipeName}
+					/>
+				</InputsContext.Provider>
 			</Content>
 		</Layout>
 	);

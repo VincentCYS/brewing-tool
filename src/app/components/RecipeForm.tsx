@@ -61,7 +61,7 @@ export default function RecipeForm(props: {
 
 		let data: TableDataType[] = [];
 		// Calculate new water amounts
-		inputs.map((input) => {
+		inputs.map((input: any) => {
 			const originalWater = parseFloat(input.value);
 
 			if (isNaN(originalWater)) return "";
@@ -88,14 +88,14 @@ export default function RecipeForm(props: {
 
 	const handleRemoveInput = (id: number) => {
 		if (inputs.length > 1) {
-			setInputs(inputs.filter((input) => input.id !== id));
+			setInputs(inputs.filter((input: any) => input.id !== id));
 			setTableData((prev) => prev.filter((data) => data.key !== id.toString()));
 		}
 	};
 
 	const handleInputChange = (id: number, value: string) => {
 		setInputs(
-			inputs.map((input) => {
+			inputs.map((input: any) => {
 				if (input.id === id) {
 					return { ...input, value };
 				} else {
@@ -157,7 +157,7 @@ export default function RecipeForm(props: {
 				<Button
 					type="text"
 					onClick={() => setIsModalOpen(true)}
-					disabled={!groundsInput || inputs.some((input) => !input.value)}
+					disabled={!groundsInput || inputs.some((input: any) => !input.value)}
 					icon={<StarOutlined />}
 				/>
 			</Row>
@@ -174,7 +174,7 @@ export default function RecipeForm(props: {
 			/>
 
 			<Text>Water per pour</Text>
-			{inputs.map((input) => (
+			{inputs.map((input: any) => (
 				<div
 					key={input.id}
 					className={styles.inputGroup}

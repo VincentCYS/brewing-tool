@@ -84,6 +84,7 @@ export default function MyFavouriteSelector() {
 				{favorites.find((recipe) => recipe.label === recipeName) && (
 					<Button
 						type="text"
+						danger
 						onClick={() => {
 							const recipe = favorites.find((r) => r.label === recipeName);
 							if (recipe) deleteRecipe(recipe.value);

@@ -159,7 +159,7 @@ export default function RecipeForm(props: {
 				justify="space-between"
 				style={{ marginBottom: "1rem" }}
 			>
-				<Title level={5}>Original Brewing Recipe</Title>
+				<Title level={5}>1. Enter Original Brewing Recipe</Title>
 				<Button
 					type="text"
 					onClick={() => setIsModalOpen(true)}
@@ -167,8 +167,7 @@ export default function RecipeForm(props: {
 					icon={<StarOutlined />}
 				/>
 			</Row>
-
-			<Text>Original grounds</Text>
+			<Text>Coffee grounds</Text>
 			<InputNumber
 				key={"groundsInput"}
 				type="number"
@@ -178,7 +177,6 @@ export default function RecipeForm(props: {
 				style={{ width: "100%", marginBottom: "1rem" }}
 				addonAfter={"g"}
 			/>
-
 			<Text>Water per pour</Text>
 			{inputs.map((input) => (
 				<div
@@ -194,15 +192,14 @@ export default function RecipeForm(props: {
 						style={{ width: "100%" }}
 						addonAfter={"ml"}
 					/>
-					{inputs.length > 1 && (
-						<Button
-							type="text"
-							danger
-							shape="circle"
-							onClick={() => handleRemoveInput(input.id)}
-							icon={<DeleteOutlined />}
-						/>
-					)}
+					<Button
+						type="text"
+						danger
+						shape="circle"
+						onClick={() => handleRemoveInput(input.id)}
+						icon={<DeleteOutlined />}
+						disabled={inputs.length <= 1}
+					/>
 				</div>
 			))}
 			<Button
@@ -212,7 +209,6 @@ export default function RecipeForm(props: {
 			>
 				+
 			</Button>
-
 			<Button
 				type="text"
 				onClick={() => {
@@ -224,15 +220,12 @@ export default function RecipeForm(props: {
 			>
 				Reset
 			</Button>
-
 			<Space direction="vertical" style={{ width: "100%" }}></Space>
 			<Divider />
-
 			<Title level={5} style={{ marginBottom: "1rem" }}>
-				Recalculated water amount
+				2. Enter Target Brewing Recipe
 			</Title>
-
-			<Text>Target grounds</Text>
+			<Text>Target coffee grounds</Text>
 			<InputNumber
 				key={"targetGroundsInput"}
 				type="number"
@@ -241,9 +234,13 @@ export default function RecipeForm(props: {
 				style={{ width: "100%" }}
 				addonAfter={"g"}
 			/>
-
+			<Divider />
+			<Title level={5} style={{ marginBottom: "1rem" }}>
+				3. Result
+			</Title>
 			<RatioDisplay inputs={inputs} groundsInput={groundsInput} />
 
+			<Text style={{ marginBottom: "1rem" }}>Recalculated Water Amounts</Text>
 			{/* Table for displaying recalculated water amounts */}
 			<Table<TableDataType>
 				pagination={false}
@@ -251,7 +248,6 @@ export default function RecipeForm(props: {
 				dataSource={tableData}
 				style={{ marginBottom: "10rem" }}
 			/>
-
 			{/* Modal for saving recipe */}
 			<Modal
 				open={isModalOpen}

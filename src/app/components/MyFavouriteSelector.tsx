@@ -65,7 +65,7 @@ export default function MyFavouriteSelector() {
 		};
 
 		loadFavorites();
-	}, [recipeName, favorites, setFavorites]);
+	}, []);
 
 	return (
 		<div className={styles.favoritesSection}>

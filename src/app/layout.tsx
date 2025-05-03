@@ -24,11 +24,14 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<script
-				async
-				src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4601799641974929"
-				crossorigin="anonymous"
-			></script>
+			<head>
+				<script
+					async
+					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4601799641974929"
+					crossorigin="anonymous"
+				></script>
+			</head>
+
 			<body className={`${geistSans.variable} ${geistMono.variable}`}>
 				{children}
 			</body>
